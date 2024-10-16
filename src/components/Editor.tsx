@@ -63,7 +63,16 @@ function extractUIRepr(sourceFile: ts.SourceFile): UIRepr | null {
 
     return propsRepr;
   }
-
+  function parseStringLiteral(str){
+    return {
+      component: 'TextNode',
+      props: {
+        text: {
+          value: str
+        }
+      }
+    }
+  }
   // Helper function to parse object literals into JsonMap
   function parseObjectLiteral(objLiteral: ts.ObjectLiteralExpression): JsonMap {
     const map: JsonMap = {};
@@ -138,7 +147,7 @@ function extractUIRepr(sourceFile: ts.SourceFile): UIRepr | null {
       } else if (ts.isJsxText(child)) {
         const text = child.text.trim();
         if (text.length > 0) {
-          result.push(text);
+          result.push(parseStringLiteral(text));
         }
       } else if (ts.isJsxExpression(child)) {
         if (child.expression) {
